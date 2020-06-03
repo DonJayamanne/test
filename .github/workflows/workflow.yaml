@@ -5,14 +5,16 @@ on:
     branches:
       - release
       - master
-    paths-ignore: # dont run when changes made to these folders
-      - ".vscode/**"
-
+      paths-ignore: # dont run when changes made to these folders
+      - '.vscode/**'
+  pull_request:
+    branches:
+      - release
+      - master
 
 env:
   CACHE_NPM_DEPS: cache-npm
   CACHE_OUT_DIRECTORY: cache-out-directory
-
 
 jobs:
   js-ts-deps:
@@ -65,7 +67,6 @@ jobs:
 
       - name: Run tests
         run: npm run test
-
 
   build-vsix:
     name: Build VSIX
