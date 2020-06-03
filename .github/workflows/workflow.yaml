@@ -53,8 +53,8 @@ jobs:
       - name: Compile
         run: npm run compile
 
-    #   - name: Check dependencies
-    #     run: npm run checkDependencies
+      #   - name: Check dependencies
+      #     run: npm run checkDependencies
 
       - name: Run linting on TypeScript code
         run: npm run lint
@@ -63,7 +63,11 @@ jobs:
         run: npx prettier 'src/**/*.ts*' --check
 
       - name: Run tests
-        run: npm run test
+        env:
+          DISPLAY: 10
+        uses: GabrielBB/xvfb-action@v1.0
+        with:
+          run: npm run test
 
   build-vsix:
     name: Build VSIX
