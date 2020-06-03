@@ -87,10 +87,10 @@ jobs:
         run: npm ci --prefer-offline
 
       - name: Install VSC
-        run: npm i -g vsce
+        run: npm i vsce
 
       - name: Package the VSIX
-        run: vsce package -o ms-python-jupyter.vsix
+        run: npx vsce package -o ms-python-jupyter.vsix
 
       - name: Package the VSIX
         run: npm run package
