@@ -26,7 +26,7 @@
         "compile": "tsc -p ./",
         "lint": "eslint src --ext ts",
         "watch": "tsc -watch -p ./",
-        "package": "vsce package -o ms-python-jupyter.vsix",
+        "npx ": "vsce package -o ms-python-jupyter.vsix",
         "test": "node ./out/test/runTest.js",
         "prettier-fix": "prettier 'src/**/*.ts*' --write"
     },
