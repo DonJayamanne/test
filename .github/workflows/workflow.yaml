@@ -1,4 +1,4 @@
-name: vsixviewer
+name: CI
 
 on:
   push:
