@@ -1,0 +1,93 @@
+name: vsixviewer
+
+on:
+  push:
+    branches:
+      - release
+      - master
+    paths-ignore: # dont run when changes made to these folders
+      - ".vscode/**"
+
+
+env:
+  CACHE_NPM_DEPS: cache-npm
+  CACHE_OUT_DIRECTORY: cache-out-directory
+
+
+jobs:
+  js-ts-deps:
+    name: Install npm dependencies
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Install dependencies (npm ci)
+        run: npm ci --prefer-offline
+
+      - name: Cache npm files
+        uses: actions/cache@v1
+        with:
+          path: ~/.npm
+          key: ${{runner.os}}-${{env.CACHE_NPM_DEPS}}-${{hashFiles('package-lock.json')}}
+
+  compile-hygiene-test:
+    name: Compile, lint, check for errors
+    runs-on: ubuntu-latest
+    needs: [js-ts-deps]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Retrieve cached npm files
+        uses: actions/cache@v1
+        with:
+          path: ~/.npm
+          key: ${{runner.os}}-${{env.CACHE_NPM_DEPS}}-${{hashFiles('package-lock.json')}}
+
+      - name: Install dependencies (npm ci)
+        run: npm ci --prefer-offline
+
+      - name: Compile
+        run: npm run compile
+
+      - name: Check dependencies
+        run: npm run checkDependencies
+
+      - name: Run linting on TypeScript code
+        run: npx tslint --project tsconfig.json
+
+      - name: Run prettier on TypeScript code
+        run: npx prettier 'src/**/*.ts*' --check
+
+      - name: Run prettier on JavaScript code
+        run: npx prettier 'build/**/*.js' --check
+
+      - name: Run tests
+        run: npm run test
+
+
+  build-vsix:
+    name: Build VSIX
+    runs-on: ubuntu-latest
+    needs: [js-ts-deps, compile-hygiene-test]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Retrieve cached npm files
+        uses: actions/cache@v1
+        with:
+          path: ~/.npm
+          key: ${{runner.os}}-${{env.CACHE_NPM_DEPS}}-${{hashFiles('package-lock.json')}}
+
+      - name: Install dependencies (npm ci)
+        run: npm ci --prefer-offline
+
+      - name: Package the VSIX
+        run: npm run package
+
+      - uses: actions/upload-artifact@v1
+        with:
+          name: ${{env.ARTIFACT_NAME_VSIX}}
+          path: ms-python-jupyter.vsix
