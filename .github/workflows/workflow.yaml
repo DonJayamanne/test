@@ -5,7 +5,7 @@ on:
     branches:
       - release
       - master
-      paths-ignore: # dont run when changes made to these folders
+    paths-ignore: # dont run when changes made to these folders
       - '.vscode/**'
   pull_request:
     branches:
