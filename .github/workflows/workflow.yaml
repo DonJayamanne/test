@@ -86,6 +86,9 @@ jobs:
       - name: Install dependencies (npm ci)
         run: npm ci --prefer-offline
 
+      - name: Install VSC
+        run: npm i vsce
+
       - name: Package the VSIX
         run: npm run package
 
