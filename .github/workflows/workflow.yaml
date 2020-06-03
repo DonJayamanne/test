@@ -53,17 +53,14 @@ jobs:
       - name: Compile
         run: npm run compile
 
-      - name: Check dependencies
-        run: npm run checkDependencies
+    #   - name: Check dependencies
+    #     run: npm run checkDependencies
 
       - name: Run linting on TypeScript code
-        run: npx tslint --project tsconfig.json
+        run: npm run lint
 
       - name: Run prettier on TypeScript code
         run: npx prettier 'src/**/*.ts*' --check
-
-      - name: Run prettier on JavaScript code
-        run: npx prettier 'build/**/*.js' --check
 
       - name: Run tests
         run: npm run test
